@@ -161,3 +161,32 @@ details>summary::-webkit-details-marker{display:none}
 .msgbar select{flex:0 1 auto;width:auto;max-width:42%;border:0;background:var(--chip);border-radius:999px;min-height:34px;padding:4px 10px;font-size:13px;color:var(--muted)}
 .msgbar .send{flex:none;width:36px;height:36px;border:0;border-radius:50%;background:var(--accent);color:var(--card);font-size:15px;cursor:pointer}
 .msgbar textarea:focus{outline:none}
+
+/* how it works */
+.os{width:100%;height:auto;display:block}
+.os text{font:600 12px system-ui,-apple-system,"Segoe UI",Arial,sans-serif;fill:var(--text);pointer-events:none}
+.os-node{cursor:pointer;transition:opacity .15s}
+.os-node rect{stroke-width:1.4}
+.k-person rect{fill:var(--accent);stroke:var(--accent)}.k-person text{fill:var(--card)}
+.k-app rect{fill:var(--accent-bg);stroke:var(--accent)}
+.k-agent rect{fill:var(--card);stroke:var(--line)}
+.k-store rect{fill:var(--ok-bg);stroke:var(--ok)}.k-store text{fill:var(--ok);font-size:12.5px}
+.k-file rect{fill:var(--card);stroke:var(--ok)}
+.k-ext rect{fill:var(--chip);stroke:var(--line);stroke-dasharray:4 3}.k-ext text{fill:var(--muted)}
+.os-node.sel rect{stroke:var(--g-medium);stroke-width:2.6}
+.os-node:focus{outline:none}.os-node:focus-visible rect{stroke:var(--accent);stroke-width:2.6}
+.os-node.dim,.os-edge.dim{opacity:.25}
+.os-edge{fill:none;stroke:var(--muted);transition:opacity .15s}
+.os-edge.t-edit{stroke-width:1.8}
+.os-edge.t-add{stroke-width:1.6;stroke-dasharray:5 4}
+.os-edge.t-use{stroke-width:1;stroke:var(--line)}
+.os-edge.hot{stroke:var(--g-medium)}
+.os marker path{fill:var(--muted)}
+.os-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:12.5px;color:var(--muted)}
+.os-legend span{display:inline-flex;align-items:center;gap:6px}
+.lg{display:inline-block;width:22px;height:0;border-top:2px solid var(--muted)}
+.lg.add{border-top-style:dashed}.lg.use{border-top:1px solid var(--line)}
+.os-detail h2{margin:2px 0 4px;font-size:18px}
+.os-detail p{margin:0 0 10px}
+.os-detail .kv{margin-top:8px}
+a.icon{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}

@@ -26,7 +26,7 @@
   const S = {
     token: null, root: ss.get('vw_root') || '', base: ls.get('vw_base'),
     port: null, folders: [], notes: {}, completed: [], archived: [], cosNames: [], reqNames: [], doneNames: [], suggestText: '',
-    extraNotes: {}, det: new Set(), detClosed: new Set(), editor: null, editing: null, picking: null, busy: false, loadedAt: 0,
+    extraNotes: {}, det: new Set(), detClosed: new Set(), editor: null, editing: null, picking: null, osSel: '', busy: false, loadedAt: 0,
     filter: new Set((ls.get('vw_filter') || 'high,medium').split(',').filter(g => GROUPS.includes(g))),
     sort: ls.get('vw_sort') || 'priority', loadError: '', loading: false,
   };
@@ -286,7 +286,7 @@
     if (!S.port) { app.innerHTML = '<p class="muted">Loading…</p>'; return; }
     if (S.editor) return renderEditor();
     const M = model(), r = route();
-    app.innerHTML = r.view === 'project' ? projectView(M, r.group, r.folder) : r.view === 'week' ? weekView(M) : homeView(M);
+    app.innerHTML = r.view === 'project' ? projectView(M, r.group, r.folder) : r.view === 'week' ? weekView(M) : r.view === 'os' ? osView() : homeView(M);
   }
 
   function renderLogin() {
@@ -307,7 +307,7 @@
 
   function statusBar(M) {
     const cos = M.cos.last ? 'Dobbie checked ' + M.cos.last.slice(5) : 'Dobbie has not checked yet';
-    return `<header class="titlebar"><h1>Vas Chief of Staff Dashboard</h1><div class="topbar"><button class="icon" data-act="reload" aria-label="Refresh">↻</button>
+    return `<header class="titlebar"><h1>Vas Chief of Staff Dashboard</h1><div class="topbar"><a class="icon" href="#/os" aria-label="How the system works" title="How the system works">ⓘ</a><button class="icon" data-act="reload" aria-label="Refresh">↻</button>
       <details class="menu" ${det('menu')}><summary aria-label="Menu">⋯</summary><div class="menubox"><button data-act="edit-portfolio">Edit PORTFOLIO.md</button><button data-act="logout">Log out</button></div></details></div></header>
       <p class="statusline">Updated ${esc(when(M.newest))} · ${S.loading ? 'Refreshing…' : 'Loaded ' + esc(when(new Date(S.loadedAt).toISOString()))} · <span class="${M.cos.stale ? 'bad' : ''}">${esc(cos)}</span></p>
       ${S.loadError ? `<p class="statusline bad">Last refresh failed: ${esc(S.loadError)}</p>` : ''}`;
@@ -471,6 +471,13 @@
     }).join('') + '</section>';
   }
 
+  function osView() {
+    const O = window.VW_OS;
+    return `<header class="top"><a class="back" href="#/">‹ Today</a><span class="label">How the system works</span></header>
+      <section class="card pad">${O.svg(S.osSel)}${O.legend}</section>
+      <section class="card pad">${O.details(S.osSel)}</section>`;
+  }
+
   // ---------- Events ----------
   app.addEventListener('toggle', ev => {
     const k = ev.target.dataset && ev.target.dataset.key;
@@ -480,7 +487,15 @@
 
   window.addEventListener('hashchange', () => { S.det.delete('menu'); S.editing = null; S.picking = null; render(); window.scrollTo(0, 0); });
 
+  const pickNode = el => { const id = el.dataset.node; S.osSel = S.osSel === id ? '' : id; render(); };
+  app.addEventListener('keydown', ev => {
+    const n = ev.target.closest && ev.target.closest('[data-node]');
+    if (n && (ev.key === 'Enter' || ev.key === ' ')) { ev.preventDefault(); pickNode(n); }
+  });
+
   app.addEventListener('click', async ev => {
+    const n = ev.target.closest('[data-node]');
+    if (n) { pickNode(n); return; }
     const b = ev.target.closest('[data-act]');
     if (!b) return;
     const d = b.dataset, act = d.act, folder = d.folder, line = +d.line;
