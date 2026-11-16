@@ -74,7 +74,7 @@
     return out.join('\n');
   }
 
-  // YAML scalar or list, readable by build_dashboard.py's simple parser.
+  // YAML scalar or list, readable by simple line-based parsers (agents, scripts).
   // Straight double quotes become ” so both parsers read the value back unchanged.
   const tidy = x => String(x).replace(/\s+/g, ' ').trim().replace(/"/g, '”').replace(/^'|'$/g, '’');
   function fmtYaml(v) {
@@ -331,7 +331,7 @@
     return m ? Date.UTC(+m[1], +m[2] - 1, +m[3]) / 864e5 : null;
   }
 
-  // Same rules as build_dashboard.py.
+  // Alert rules (formerly build_dashboard.py).
   function computeExceptions(port, projects, todayStr) {
     const ex = [], t = dayNum(todayStr);
     const listed = new Map(port.projects.map(p => [p.folder, p]));
