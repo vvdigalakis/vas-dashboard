@@ -5,8 +5,8 @@
 
   // kind: person | app | agent | store | file | ext
   const NODES = [
-    { id: 'vas', kind: 'person', x: 135, y: 12, w: 90, h: 36, label: ['You'],
-      title: 'You (Vas)', role: 'Decide priorities and all scientific questions. Everything else is bookkeeping for agents.',
+    { id: 'vas', kind: 'person', x: 135, y: 12, w: 90, h: 36, label: ['Vas'],
+      title: 'Vas', role: 'Decide priorities and all scientific questions. Everything else is bookkeeping for agents.',
       rows: [['Uses', 'The app on phone or web; Dobbie in ChatGPT; Claude Code / Codex in VS Code.'], ['Goal', 'Under 5 minutes a day of upkeep.']] },
     { id: 'app', kind: 'app', x: 6, y: 100, w: 80, h: 48, label: ['Dashboard', 'app'],
       title: 'Dashboard app', role: 'This page. See status, pick today’s work, edit, leave messages.',
