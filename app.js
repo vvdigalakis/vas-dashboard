@@ -285,8 +285,7 @@
 
   function renderLogin() {
     const key = appKey();
-    app.innerHTML = `<section class="card pad login"><h1>Vas Chief of Staff</h1>
-      <p class="muted">Reads and edits vas-work directly in your Dropbox. Your files never leave Dropbox.</p>
+    app.innerHTML = `<section class="card pad login"><h1>Vas Chief of Staff Dashboard</h1>
       ${key ? '<button class="btn primary" data-act="login">Log in with Dropbox</button>'
         : '<form data-form="appkey" class="stack"><label>Dropbox app key<input name="key" required autocomplete="off" spellcheck="false"></label><button class="btn primary">Save key</button></form>'}
     </section>`;
