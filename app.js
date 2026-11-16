@@ -28,7 +28,7 @@
     port: null, folders: [], notes: {}, completed: [], archived: [], cosNames: [], reqNames: [], doneNames: [], suggestText: '',
     extraNotes: {}, det: new Set(), detClosed: new Set(), editor: null, editing: null, picking: null, busy: false, loadedAt: 0,
     filter: new Set((ls.get('vw_filter') || 'high,medium').split(',').filter(g => GROUPS.includes(g))),
-    sort: ls.get('vw_sort') || 'priority',
+    sort: ls.get('vw_sort') || 'priority', loadError: '', loading: false,
   };
   { const t = ss.get('vw_token'), exp = +ss.get('vw_exp') || 0; if (t && Date.now() < exp) S.token = t; }
 
@@ -141,6 +141,12 @@
   const projectPath = (group, folder) => `${S.base}/research/projects-${group === 'completed' || group === 'archived' ? group : 'active'}/${folder}`;
 
   async function load() {
+    S.loading = true; S.loadError = '';
+    if (S.port) render();
+    try { await loadInner(); } catch (e) { S.loadError = e.message || String(e); throw e; } finally { S.loading = false; if (S.token && S.port) render(); }
+  }
+
+  async function loadInner() {
     say('Loading…');
     if (!S.base) S.base = await findBase();
     const b = S.base, P = b + '/research/';
@@ -303,7 +309,8 @@
     const cos = M.cos.last ? 'Dobbie checked ' + M.cos.last.slice(5) : 'Dobbie has not checked yet';
     return `<header class="titlebar"><h1>Vas Chief of Staff Dashboard</h1><div class="topbar"><button class="icon" data-act="reload" aria-label="Refresh">↻</button>
       <details class="menu" ${det('menu')}><summary aria-label="Menu">⋯</summary><div class="menubox"><button data-act="edit-portfolio">Edit PORTFOLIO.md</button><button data-act="logout">Log out</button></div></details></div></header>
-      <p class="statusline">Updated ${esc(when(M.newest))} · Loaded ${esc(when(new Date(S.loadedAt).toISOString()))} · <span class="${M.cos.stale ? 'bad' : ''}">${esc(cos)}</span></p>`;
+      <p class="statusline">Updated ${esc(when(M.newest))} · ${S.loading ? 'Refreshing…' : 'Loaded ' + esc(when(new Date(S.loadedAt).toISOString()))} · <span class="${M.cos.stale ? 'bad' : ''}">${esc(cos)}</span></p>
+      ${S.loadError ? `<p class="statusline bad">Last refresh failed: ${esc(S.loadError)}</p>` : ''}`;
   }
 
   function workRow(i, opts) {
